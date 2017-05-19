@@ -1,0 +1,115 @@
+---
+title: "Informe GLM"
+author: "Nombre de Equipo"
+date: "Fecha del Laboratorio"
+output: 
+  html_document: 
+    fig_height: 4
+    highlight: pygments
+    theme: spacelab
+---
+
+```{r setup, include=FALSE}
+# NO CAMBIAR EL BlOQUE
+knitr::opts_chunk$set(echo = TRUE)
+
+```
+
+
+## Informe de Laboratorio
+
+#### Cargar los datos:
+```{r cargar-datos}
+
+```
+
+
+## Ejercicios:
+
+#### Ejercicio 1: 
+
+```{r}
+
+```
+
+
+#### Ejercicio 2: 
+
+
+
+#### Ejercicio 3: 
+
+
+
+#### Ejercicio 4: 
+
+
+
+
+#### Ejercicio 5: 
+
+
+
+#### Ejercicio 6:
+
+
+
+#### Ejercicio 7:
+
+
+
+#### Ejercicio 8:
+
+#### Ejercicio 9:
+
+
+
+* * *
+
+## Por su cuenta:
+
+#### 1: 
+
+```{r cargar-nuevos-datos}
+
+```
+
+
+
+
+#### 2: 
+
+
+
+
+#### 3:
+
+
+
+#### 4:
+
+
+
+
+
+#### 5:
+
+
+
+
+
+## Infome de trabajo en equipo
+
+<!--
+Para cada miembro del equipo, escriba su nombre, si estuvo o presente en la
+sesión de laboratorio, si fue autor en esta semana y su contribución al 
+laboratorio (como porcentaje). Los porcentajes deben sumar 100.
+-->
+
+| Team miembro            | Presente  | Autor   | Contribución % |
+|:------------------------|:---------:|:-------:|---------------:|
+| Nombre de miembro 1     | Sí / No   | Sí / No | 25%            |
+| Nombre de miembro 2     | Sí / No   | Sí / No | 25%            |
+| Nombre de miembro 3     | Sí / No   | Sí / No | 25%            |
+| Nombre de miembro 4     | Sí / No   | Sí / No | 25%            |
+| Total                   |           |         | 100%           |

@@ -1,0 +1,40 @@
+---
+title: "Laboratorio GLM"
+output: html_notebook
+---
+
+
+```{r setup, include = FALSE}
+knitr::opts_chunk$set(eval = FALSE)
+library(ggplot2)
+
+```
+
+
+
+```{r cargar-cancer}
+cancer <- read.table("../data/clusters.txt", header = TRUE)
+```
+
+
+```{r}
+ggplot(cancer, aes(Distance, Cancers)) + 
+  geom_point()
+```
+
+```{r}
+ggplot(cancer, aes(as.factor(Cancers), Distance)) + 
+  geom_violin()
+```
+
+
+```{r}
+cancer_mod <- glm(Cancers ~ Distance, family = "poisson", data = cancer)
+summary(cancer_mod)
+```
+
+```{r}
+cancer_mod2 <- glm(Cancers ~ Distance, family = quasipoisson(), data = cancer)
+summary(cancer_mod2)
+```
+
