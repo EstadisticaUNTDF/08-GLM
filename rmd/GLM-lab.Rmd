@@ -13,15 +13,15 @@ library(GGally)
 library(ggfortify)
 ```
 
-# FloraciÃ³n de un pasto en el bosque aprovechado forestalmente
+# Floración de un pasto en el bosque aprovechado forestalmente
 
-Los datos corresponden a nÃºmero de inflorescencias por planta de *Phleum alpinum*,
-una especie de *Poaceae* (pasto para la plebe), y otras variables, nÃºmero de 
+Los datos corresponden a número de inflorescencias por planta de *Phleum alpinum*,
+una especie de *Poaceae* (pasto para la plebe), y otras variables, número de 
 macollos, circunferencia de planta, biomasa aÃ©rea y ambiente donde crecia la 
 planta: V = Bosque Virgen, D = Dentro de Agregado, C = Cerca de Agregado, 
-L = Lejos de Agregado. La luz y precipataciones que llegan al suelo siguen esta
-relaciÃ³n L>C>D>V. 
-Una de las preguntas de interÃ©s es saber como el ambiente afecta el Ã©xito
+L = Lejos de Agregado. La luz y precipitaciones que llegan al suelo siguen esta
+relación L>C>D>V. 
+Una de las preguntas de interés es saber cómo el ambiente afecta el éxito
 reproductivo de las plantas. Una forma serÃ­a ver en que ambientes tiene mÃ¡s
 inflorescencias las plantas.
 
