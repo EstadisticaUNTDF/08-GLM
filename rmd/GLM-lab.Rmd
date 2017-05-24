@@ -13,20 +13,28 @@ library(GGally)
 library(ggfortify)
 ```
 
-# Floraci�n de un pasto en el bosque aprovechado forestalmente
+Antes que nada, bajen el modelo de informe:
 
-Los datos corresponden a n�mero de inflorescencias por planta de *Phleum alpinum*,
-una especie de *Poaceae* (pasto para la plebe), y otras variables, n�mero de 
-macollos, circunferencia de planta, biomasa aérea y ambiente donde crecia la 
+```{r}
+download.file("https://git.io/vHY93", "Informe.Rmd")
+```
+
+
+
+# Floración de un pasto en el bosque aprovechado forestalmente
+
+Los datos corresponden a número de inflorescencias por planta de *Phleum alpinum*,
+una especie de *Poaceae* (pasto para la plebe), y otras variables, número de 
+macollos, circunferencia de planta, biomasa aÃ©rea y ambiente donde crecia la 
 planta: V = Bosque Virgen, D = Dentro de Agregado, C = Cerca de Agregado, 
 L = Lejos de Agregado. La luz y precipitaciones que llegan al suelo siguen esta
-relaci�n L>C>D>V. 
-Una de las preguntas de inter�s es saber c�mo el ambiente afecta el �xito
-reproductivo de las plantas. Una forma sería ver en que ambientes tiene más
+relación L>C>D>V. 
+Una de las preguntas de interés es saber cómo el ambiente afecta el éxito
+reproductivo de las plantas. Una forma será ver en qué ambientes tiene más
 inflorescencias las plantas.
 
 ```{r cargar-phleum}
-phfinal <- read.csv("../cache/phfinal.csv", header = T)
+phfinal <- read.csv(url("https://git.io/vHY9D"), header = T)
 ```
 
 Como primer paso, vamos a realizar un gráfico exploratorio de todas las
@@ -54,8 +62,8 @@ y lo comparamos con los demás:
 phfinal[, "Circ"]
 ```
 
-Resulta muy factible que quien entró los datos haya olvidado poner la coma 
-decimal donde correspondía (¿Quién habrá sido?). Vamos a arreglarlo:
+Resulta muy factible que quien entra los datos haya olvidado poner la coma 
+decimal donde correspondería (¿Quién habrá sido?). Vamos a arreglarlo:
 
 
 ```{r}
@@ -68,7 +76,7 @@ Para asegurarnos que este todo bien, volvamos a hacer el gráfico anterior.
 ggpairs(phfinal)
 ```
 
-Podemos intentar ajustar un modelo para ver de que depende y si depende de
+Podemos intentar ajustar un modelo para ver de qué depende y si depende de
 algo más además del ambiente. 
 
 ```{r}
@@ -82,7 +90,7 @@ anova(mod_bma, test = "Chisq")
 ```
 
 Leyendo el resumen del modelo, vemos que algunos coeficientes no pudieron 
-calcularse por singularidades, es decir no había suficientes datos. Por lo
+calcularse por singularidades, es decir no hay suficientes datos. Por lo
 que es muy recomendable ajustar un modelo más simple.
 
 ```{r}
@@ -97,8 +105,7 @@ anova(mod_bma, test = "Chisq")
 ```
 
 ## Ejercicio 2
-Este modelo estima todos los coeficientes, y todas variables explicatorias y sus interacciones son significativas. Pero tiene un
-problema, ¿Cuál es?
+Este modelo estima todos los coeficientes, y todas variables explicatorias y sus interacciones son significativas. Pero tiene un problema, ¿cuál es?
 
 A continuación analizemos los residuos del modelo:
 
@@ -115,8 +122,7 @@ summary(mod_a)
 
 ## Por su cuenta
 
-En verdad el número de inflorescencias es función del número de macollos. Por lo que es bastante obvio que, si hay más macollos va
-a haber más inflorescencias.
+En verdad el número de inflorescencias es función del número de macollos. Por lo que es bastante obvio que, si hay más macollos va a haber más inflorescencias.
 
 Resulta más interesante, ecologicamente, investigar que proporción de 
 macollos llegan a florecer.
@@ -127,7 +133,7 @@ macollos llegan a florecer.
 ¿Que distribución debemos usar para modelar este tipo de dato?
 
 ## Ejercicio 5
-Calculen la proporción y grafiquenla por ambiente.
+Calculen la proporción y grafíquenla por ambiente.
 
 
 Una aclaración, cuando tenemos datos donde hay una proporción debemos indicar el peso de cada dato. No es lo mismo que florezcan 5/10 macollos que 20/40 aunque la proporción sea la misma. El segundo dato
@@ -158,5 +164,17 @@ comprobar que ambos métodos dan los mismos resultados.
 ## Ejercicio 7
 
 Analicen los residuos del modelo.
+
+
+## Ejercicio 8
+Analizar la Bondad del Ajuste basado en el Estadístico de Pearson:
+¿Cuál es la hipótesis nula?
+
+Calcule el valor del estadístico:
+```{r}
+res.pearson<- sum(residuals(glm, type="pearson")^2)
+```
+
+¿Es significativo?, para eso realice el Test (`chisq.test()`).
 
 
