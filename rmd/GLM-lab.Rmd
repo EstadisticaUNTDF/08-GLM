@@ -1,40 +1,162 @@
 ---
 title: "Laboratorio GLM"
-output: html_notebook
+output:
+  html_document: default
+  html_notebook: default
 ---
 
 
 ```{r setup, include = FALSE}
 knitr::opts_chunk$set(eval = FALSE)
 library(ggplot2)
-
+library(GGally)
+library(ggfortify)
 ```
 
+# Floración de un pasto en el bosque aprovechado forestalmente
+
+Los datos corresponden a número de inflorescencias por planta de *Phleum alpinum*,
+una especie de *Poaceae* (pasto para la plebe), y otras variables, número de 
+macollos, circunferencia de planta, biomasa aérea y ambiente donde crecia la 
+planta: V = Bosque Virgen, D = Dentro de Agregado, C = Cerca de Agregado, 
+L = Lejos de Agregado. La luz y precipataciones que llegan al suelo siguen esta
+relación L>C>D>V. 
+Una de las preguntas de interés es saber como el ambiente afecta el éxito
+reproductivo de las plantas. Una forma sería ver en que ambientes tiene más
+inflorescencias las plantas.
+
+```{r cargar-phleum}
+phfinal <- read.csv("../cache/phfinal.csv", header = T)
+```
+
+Como primer paso, vamos a realizar un gráfico exploratorio de todas las
+variables.
+
+```{r}
+ggpairs(phfinal)
+```
+## Ejercicio 1
+¿Qué relaciones encuentran entre las variables? ¿Hay algo que llame su atención?
 
 
-```{r cargar-cancer}
-cancer <- read.table("../data/clusters.txt", header = TRUE)
+Si entre las cosas que llamaron su atención se encuentra un punto en `Circ`
+(circunferencia), contestaron una parte de la pregunta anterior bien. 
+Si vemos el dato:
+
+```{r}
+phfinal[which(phfinal$Circ>100), "Circ"]
+```
+
+y lo comparamos con los demás:
+
+
+```{r}
+phfinal[, "Circ"]
+```
+
+Resulta muy factible que quien entró los datos haya olvidado poner la coma 
+decimal donde correspondía (¿Quién habrá sido?). Vamos a arreglarlo:
+
+
+```{r}
+phfinal[which(phfinal$Circ>100), "Circ"] <- phfinal[which(phfinal$Circ>100), "Circ"]/10
+```
+
+Para asegurarnos que este todo bien, volvamos a hacer el gráfico anterior.
+
+```{r}
+ggpairs(phfinal)
+```
+
+Podemos intentar ajustar un modelo para ver de que depende y si depende de
+algo más además del ambiente. 
+
+```{r}
+mod_bma <- glm(Inflorescencias ~ Biomasa * Macollos * Circ * Ambiente, 
+                  family = "poisson", data = phfinal)
+summary(mod_bma)
+```
+
+```{r}
+anova(mod_bma, test = "Chisq")
+```
+
+Leyendo el resumen del modelo, vemos que algunos coeficientes no pudieron 
+calcularse por singularidades, es decir no había suficientes datos. Por lo
+que es muy recomendable ajustar un modelo más simple.
+
+```{r}
+mod_bma <- glm(Inflorescencias ~ Biomasa * Macollos * Ambiente, 
+                  family = "poisson", data = phfinal)
+summary(mod_bma)
 ```
 
 
 ```{r}
-ggplot(cancer, aes(Distance, Cancers)) + 
-  geom_point()
+anova(mod_bma, test = "Chisq")
 ```
+
+## Ejercicio 2
+Este modelo estima todos los coeficientes, y todas variables explicatorias y sus interacciones son significativas. Pero tiene un
+problema, ¿Cuál es?
+
+A continuación analizemos los residuos del modelo:
 
 ```{r}
-ggplot(cancer, aes(as.factor(Cancers), Distance)) + 
-  geom_violin()
+autoplot(mod_bma, which = 1:6)
 ```
+## Ejercicio 3
+Analicen los gráficos. ¿Hay algún punto influyente?
+
+```{r}
+mod_a <- glm(Inflorescencias ~ Ambiente, data = phfinal, family = "poisson")
+summary(mod_a)
+```
+
+## Por su cuenta
+
+En verdad el número de inflorescencias es función del número de macollos. Por lo que es bastante obvio que, si hay más macollos va
+a haber más inflorescencias.
+
+Resulta más interesante, ecologicamente, investigar que proporción de 
+macollos llegan a florecer.
+
+
+## Ejercicio 4
+
+¿Que distribución debemos usar para modelar este tipo de dato?
+
+## Ejercicio 5
+Calculen la proporción y grafiquenla por ambiente.
+
+
+Una aclaración, cuando tenemos datos donde hay una proporción debemos indicar el peso de cada dato. No es lo mismo que florezcan 5/10 macollos que 20/40 aunque la proporción sea la misma. El segundo dato
+debería ser más importante porque son más macollos. Hay dos formas
+de realizar esto en R: hacer que la variable de respuesta sea una 
+matriz con dos columnas, el número de éxitos y el número de repeticiones. En nuestro caso, ¿Qué corresponde poner en cada columna?
+Esto se hace con la función `cbind()`, por ejemplo:
+
+```{r}
+glm(cbind(exitos, total) ~ variable_explicatoria)
+```
+
+Otra forma es calculando la proporción de macollos florecidos e
+indicar el peso de cada dato con el argumento `weights` de `glm()`.
+Por ejemplo:
 
 
 ```{r}
-cancer_mod <- glm(Cancers ~ Distance, family = "poisson", data = cancer)
-summary(cancer_mod)
+glm(proporcion ~ variable_explicatoria, weights = total)
 ```
 
-```{r}
-cancer_mod2 <- glm(Cancers ~ Distance, family = quasipoisson(), data = cancer)
-summary(cancer_mod2)
-```
+## Ejercicio 6
+
+Ajusten el modelo con alguna de las opciones. Si quieren, pueden
+comprobar que ambos métodos dan los mismos resultados.
+
+
+## Ejercicio 7
+
+Analicen los residuos del modelo.
+
 
